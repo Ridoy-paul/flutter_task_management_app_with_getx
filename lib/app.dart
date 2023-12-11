@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ui/controllers/login_controller.dart';
 import 'package:get/get.dart';
 import 'ui/screens/splash_screen.dart';
 import 'ui/style.dart';
@@ -57,6 +58,6 @@ class TaskManagementApp extends StatelessWidget {
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-
+    Get.put(LoginController());
   }
 }

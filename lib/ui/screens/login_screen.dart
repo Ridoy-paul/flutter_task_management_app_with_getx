@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/data_network_caller/network_response.dart';
-import '../../data/models/user_model.dart';
+import '../controllers/login_controller.dart';
+import 'package:get/get.dart';
 import '../../data/utility/helpers.dart';
-import '../../data/utility/urls.dart';
-import '../controllers/auth_controller.dart';
 import 'forgot_password_screen.dart';
 import 'sign_up_screen.dart';
 import '../style.dart';
@@ -24,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-  bool _loginInProgress = false;
+  final LoginController _loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +66,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility(
-                        visible: _loginInProgress == false,
-                        replacement: circleProgressIndicatorShow(),
-                        child: ElevatedButton(
-                          onPressed: _loginUserConfirm,
-                          child: const Icon(Icons.arrow_circle_right_outlined),
-                        ),
+                      child: GetBuilder<LoginController>(
+                        builder: (loginController) {
+                          return Visibility(
+                            visible: !loginController.loginInProgress,
+                            replacement: circleProgressIndicatorShow(),
+                            child: ElevatedButton(
+                              onPressed: _login,
+                              child: const Icon(Icons.arrow_circle_right_outlined),
+                            ),
+                          );
+                        }
                       ),
                     ),
                     const SizedBox(height: 40,),
@@ -128,51 +129,25 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _loginUserConfirm() async {
-    if(_loginFormKey.currentState!.validate()) {
-      _loginInProgress = true;
-      if(mounted) {
-        setState(() {});
-      }
 
-      NetworkResponse response = await NetworkCaller().postRequest(Urls.login, body: {
-        "email": _emailTEController.text.trim(),
-        "password": _passwordTEController.text,
-      }, isLogin: true);
+  Future<void> _login() async {
+    if (!_loginFormKey.currentState!.validate()) {
+      return;
+    }
 
-      _loginInProgress = false;
-      if(mounted) {
-        setState(() {});
-      }
+    final response = await _loginController.loginUserConfirm(
+        _emailTEController.text.trim(), _passwordTEController.text);
 
-      if(response.isSuccess) {
-        await AuthController.saveUserInformation(response.jsonResponse['token'], UserModel.fromJson(response.jsonResponse['data']),);
-        if(mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainBottomNavScreen(),
-            ),
-          );
-        }
+    if (response) {
+      Get.offAll(const MainBottomNavScreen());
+    }
+    else {
+      if (mounted) {
+        showSnackMessage(
+            context, _loginController.message, _loginController.status);
       }
-      else {
-        if(response.statusCode == 401) {
-          if(mounted) {
-            showSnackMessage(context, "Please check email or password!", true);
-          }
-        }
-        else {
-          if(mounted) {
-            showSnackMessage(context, "Login Failed! Please try again.", true);
-          }
-        }
-      }
-
     }
   }
-
-
 
   @override
   void dispose() {
@@ -180,6 +155,4 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordTEController.dispose();
     super.dispose();
   }
-
-
 }

@@ -15,7 +15,7 @@ class LoginController extends GetxController {
   String get message => _message;
   bool get status => _status;
 
-  Future<bool> _loginUserConfirm(String email, String password) async {
+  Future<bool> loginUserConfirm(String email, String password) async {
      _loginInProgress = true;
      update();
 
