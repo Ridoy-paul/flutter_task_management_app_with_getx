@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/urls.dart';
 import '../../data/models/task.dart';
@@ -131,7 +132,8 @@ class _TaskItemCardState extends State<TaskItemCard> {
       child: ListTile(
         onTap: () {
           updateTaskStatus(e.name);
-          Navigator.pop(context);
+          Get.back();
+          //Navigator.pop(context);
         },
         tileColor: status == e.name ? colorGreen : colorWhite,
         shape: RoundedRectangleBorder(

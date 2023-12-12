@@ -83,8 +83,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                                 replacement: circleProgressIndicatorShow(),
                                 child: ElevatedButton(
                                   onPressed: createTask,
-                                  child: const Icon(
-                                      Icons.arrow_circle_right_outlined),
+                                  child: const Icon(Icons.arrow_circle_right_outlined),
                                 ),
                               );
                             }),
@@ -119,6 +118,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     showSnackMessage(_addTaskController.message, _addTaskController.successStatus);
 
     /*
+    /// Old system code
     if(_addNewTaskFormKey.currentState!.validate()) {
       _createInProgressStatus = true;
       if(mounted) {
