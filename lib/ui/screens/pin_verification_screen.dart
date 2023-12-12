@@ -153,19 +153,19 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       if(response.isSuccess) {
         if(response.jsonResponse['status'] == 'success') {
           if(mounted) {
-            showSnackMessage(context, 'Verification Success.');
+            //showSnackMessage(context, 'Verification Success.');
             Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.email, code: _pinTEController.text,)));
           }
         }
         else {
           if(mounted) {
-            showSnackMessage(context, response.jsonResponse['data'] ?? '', true);
+            //showSnackMessage(context, response.jsonResponse['data'] ?? '', true);
           }
         }
       }
       else {
         if(mounted) {
-          showSnackMessage(context, 'Network Error! Please try again.', true);
+          //showSnackMessage(context, 'Network Error! Please try again.', true);
         }
       }
 

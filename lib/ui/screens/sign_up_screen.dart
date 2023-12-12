@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/urls.dart';
 import 'login_screen.dart';
@@ -114,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                          const Text("Already have an account?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: colorGray),),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                              Get.to(const LoginScreen());
                             },
                             child: Text(
                               "Sign In",
@@ -168,13 +169,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (response.isSuccess) {
         _clearTextFields();
         if (mounted) {
-          showSnackMessage(context, 'Account created successfully!');
+          //showSnackMessage(context, 'Account created successfully!');
         }
       } else {
         if (mounted) {
-          showSnackMessage(
-              context, 'Account creation failed! Please try again.', true,
-          );
+          // showSnackMessage(
+          //     context, 'Account creation failed! Please try again.', true,
+          // );
         }
       }
     }

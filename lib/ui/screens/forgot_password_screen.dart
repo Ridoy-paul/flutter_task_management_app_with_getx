@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/helpers.dart';
 import '../../data/utility/urls.dart';
@@ -91,7 +92,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen(),),);
+                              Get.to(const LoginScreen());
                             },
                             child: Text(
                               "Sign In",
@@ -131,19 +132,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if(response.isSuccess) {
         if(response.jsonResponse['status'] == 'success') {
           if(mounted) {
-            showSnackMessage(context, '6 digit verification code sent your email.');
+            //showSnackMessage(context, '6 digit verification code sent your email.');
             Navigator.push(context, MaterialPageRoute(builder: (context) => PinVerificationScreen(email: _emailTEController.text.trim(),),),);
           }
         }
         else {
           if(mounted) {
-            showSnackMessage(context, response.jsonResponse['data'], true);
+            //showSnackMessage(context, response.jsonResponse['data'], true);
           }
         }
       }
       else {
         if(mounted) {
-          showSnackMessage(context, "Something is error! Please try again.", true);
+          //showSnackMessage(context, "Something is error! Please try again.", true);
         }
       }
 

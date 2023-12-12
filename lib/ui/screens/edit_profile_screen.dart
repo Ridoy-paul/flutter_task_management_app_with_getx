@@ -180,13 +180,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ));
 
       if(mounted) {
-        showSnackMessage(context, "Profile Updated.");
+        //showSnackMessage(context, "Profile Updated.");
       }
 
     }
     else {
       if(mounted) {
-        showSnackMessage(context, "Network Error! Please try again.", true);
+        //showSnackMessage(context, "Network Error! Please try again.", true);
       }
     }
   }

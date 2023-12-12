@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()));
+                          Get.to(const ForgotPasswordScreen());
                         },
                         child: Text(
                           "Forgot Password?",
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen(),),);
+                              Get.to(const SignUpScreen());
                             },
                             child: Text(
                               "Sign up",
@@ -142,10 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.offAll(const MainBottomNavScreen());
     }
     else {
-      if (mounted) {
-        showSnackMessage(
-            context, _loginController.message, _loginController.status);
-      }
+      showSnackMessage(_loginController.message, _loginController.errorStatus);
     }
   }
 

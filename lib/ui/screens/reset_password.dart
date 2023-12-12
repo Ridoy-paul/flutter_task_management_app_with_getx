@@ -133,7 +133,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       }
 
       if (_passwordTEController.text != _confirmPasswordTEController.text) {
-        showSnackMessage(context, "Password doesn't match!", true);
+        //showSnackMessage(context, "Password doesn't match!", true);
         _resetPasswordInProgressStatus = false;
         if (mounted) {
           setState(() {});
@@ -149,19 +149,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       if(response.isSuccess) {
         if(response.jsonResponse['status'] == 'success') {
           if(mounted) {
-            showSnackMessage(context, "New Password Set.");
+            //showSnackMessage(context, "New Password Set.");
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
           }
         }
         else {
           if(mounted) {
-            showSnackMessage(context, "Something is error! Please try again.", true);
+            //showSnackMessage(context, "Something is error! Please try again.", true);
           }
         }
       }
       else {
         if(mounted) {
-          showSnackMessage(context, "Something is error! Please try again.", true);
+          //showSnackMessage(context, "Something is error! Please try again.", true);
         }
       }
 

@@ -116,12 +116,12 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
          _subjectTEController.clear();
          _descriptionTEController.clear();
          if(mounted) {
-           showSnackMessage(context, "New Task Created.");
+           //showSnackMessage(context, "New Task Created.");
          }
        }
        else {
          if(mounted) {
-           showSnackMessage(context, "Something is wrong, Please try again!", true);
+           //showSnackMessage(context, "Something is wrong, Please try again!", true);
          }
        }
       

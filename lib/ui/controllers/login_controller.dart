@@ -9,11 +9,11 @@ class LoginController extends GetxController {
 
   bool _loginInProgress = false;
   String _message = '';
-  bool _status = true;
+  bool _errorStatus = true;
 
   bool get loginInProgress => _loginInProgress;
   String get message => _message;
-  bool get status => _status;
+  bool get errorStatus => _errorStatus;
 
   Future<bool> loginUserConfirm(String email, String password) async {
      _loginInProgress = true;
@@ -30,23 +30,15 @@ class LoginController extends GetxController {
       if(response.isSuccess) {
         await AuthController.saveUserInformation(response.jsonResponse['token'], UserModel.fromJson(response.jsonResponse['data']),);
         return true;
-        // if(mounted) {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => const MainBottomNavScreen(),
-        //     ),
-        //   );
-        // }
       }
       else {
         if(response.statusCode == 401) {
           _message = "Please check email or password!";
-          _status = false;
+          _errorStatus = false;
         }
         else {
           _message = "Login Failed! Please try again.";
-          _status = false;
+          _errorStatus = false;
         }
       }
       return false;
