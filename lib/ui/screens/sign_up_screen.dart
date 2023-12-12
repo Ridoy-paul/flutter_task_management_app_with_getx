@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import '../controllers/sign_up_controller.dart';
 import 'package:get/get.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/utility/urls.dart';
 import 'login_screen.dart';
 import '../style.dart';
 import '../widgets/snack_message.dart';
-import '../../data/data_network_caller/network_response.dart';
 import '../../data/utility/helpers.dart';
 import '../widgets/body_background_widget.dart';
 
@@ -25,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
 
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
-  bool _signUpInProgress = false;
+  final SignUpController _signUpController = Get.find<SignUpController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +42,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 50,
                     ),
                     Text(
-                        "Join With Us",
-                        style: Theme.of(context).textTheme.titleLarge,
+                      "Join With Us",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,
                     ),
                     const SizedBox(
                       height: 16,
@@ -54,28 +55,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _emailTEController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: inputStyle("Email"),
-                      validator: (value) => inputValidate(value, "Please Enter Your Email!"),
+                      validator: (value) =>
+                          inputValidate(value, "Please Enter Your Email!"),
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _firstNameTEController,
                       keyboardType: TextInputType.text,
                       decoration: inputStyle("First Name"),
-                      validator: (value) => inputValidate(value, "Please Enter Your First Name!"),
+                      validator: (value) =>
+                          inputValidate(value, "Please Enter Your First Name!"),
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _lastNameTEController,
                       keyboardType: TextInputType.text,
                       decoration: inputStyle("Last Name"),
-                      validator: (value) => inputValidate(value, "Please Enter Your Last Name"),
+                      validator: (value) =>
+                          inputValidate(value, "Please Enter Your Last Name"),
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _mobileTEController,
                       keyboardType: TextInputType.phone,
                       decoration: inputStyle("Mobile"),
-                      validator: (value) => inputValidate(value, "Please Enter Your Mobile Number"),
+                      validator: (value) =>
+                          inputValidate(
+                              value, "Please Enter Your Mobile Number"),
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
@@ -83,10 +89,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: true,
                       decoration: inputStyle("Password"),
                       validator: (value) {
-                        if(value?.isEmpty ?? true) {
+                        if (value?.isEmpty ?? true) {
                           return "Please Enter Your Password";
                         }
-                        if(value!.length < 6) {
+                        if (value!.length < 6) {
                           return "Enter Password more than 6 letter";
                         }
                         return null;
@@ -98,21 +104,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility( /// This widget used for Visibility replacement..
-                        visible: _signUpInProgress == false,
-                        replacement: circleProgressIndicatorShow(),
-                        child: ElevatedButton(
-                          onPressed: _signUp ,
-                          child: const Icon(Icons.arrow_circle_right_outlined),
-                        ),
-                      ),
+                      child: GetBuilder<SignUpController>(builder: (signUpController) {
+                        return Visibility( /// This widget used for Visibility replacement..
+                          visible: !signUpController.signUpInProgress,
+                          replacement: circleProgressIndicatorShow(),
+                          child: ElevatedButton(
+                            onPressed: _signUp,
+                            child: const Icon(
+                                Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }),
                     ),
                     const SizedBox(height: 10,),
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         const Text("Already have an account?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: colorGray),),
+                          const Text("Already have an account?",
+                            style: TextStyle(fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: colorGray),),
                           TextButton(
                             onPressed: () {
                               Get.to(const LoginScreen());
@@ -139,6 +151,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
+    if (!_signUpFormKey.currentState!.validate()) {
+      return;
+    }
+
+    final response = await _signUpController.signUpConfirm(
+        _emailTEController.text.trim(), _firstNameTEController.text.trim(),
+        _lastNameTEController.text.trim(), _mobileTEController.text.trim(),
+        _passwordTEController.text);
+    if (response) {
+      _clearTextFields();
+    }
+
+    showSnackMessage(
+        _signUpController.message, _signUpController.successStatus);
+
+    /*
+    // Old method code ----------->>>>>>>>>>>>>>>>>>>>>>>
     if (_signUpFormKey.currentState!.validate()) {
       /// This is used for circle progress enable after submit
       _signUpInProgress = true;
@@ -179,6 +208,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
       }
     }
+    */
   }
 
   void _clearTextFields() {

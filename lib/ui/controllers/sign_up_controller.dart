@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/data_network_caller/network_response.dart';
 import '../../data/utility/urls.dart';
@@ -13,7 +12,7 @@ class SignUpController extends GetxController {
   String get message => _message;
   bool get successStatus => _successStatus;
 
-  Future<void> signUpConfirm(String email, String firstName, String lastName, String mobile, String password) async {
+  Future<bool> signUpConfirm(String email, String firstName, String lastName, String mobile, String password) async {
       _signUpInProgress = true;
       update();
 
@@ -26,7 +25,6 @@ class SignUpController extends GetxController {
         "mobile": mobile,
         "password": password,
       });
-
       ///----End--------------->>>>>>>>>>>>>>>>>
 
       /// This is used for circle progress disable after submit
@@ -37,9 +35,12 @@ class SignUpController extends GetxController {
       if (response.isSuccess) {
         _message = "Account created successfully!";
         _successStatus = true;
-      } else {
+        return true;
+      }
+      else {
         _message = "Account creation failed! Please try again.";
         _successStatus = false;
+        return false;
       }
   }
 }
