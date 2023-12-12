@@ -9,11 +9,11 @@ class LoginController extends GetxController {
 
   bool _loginInProgress = false;
   String _message = '';
-  bool _errorStatus = true;
+  bool _successStatus = true;
 
   bool get loginInProgress => _loginInProgress;
   String get message => _message;
-  bool get errorStatus => _errorStatus;
+  bool get successStatus => _successStatus;
 
   Future<bool> loginUserConfirm(String email, String password) async {
      _loginInProgress = true;
@@ -34,11 +34,11 @@ class LoginController extends GetxController {
       else {
         if(response.statusCode == 401) {
           _message = "Please check email or password!";
-          _errorStatus = false;
+          _successStatus = false;
         }
         else {
           _message = "Login Failed! Please try again.";
-          _errorStatus = false;
+          _successStatus = false;
         }
       }
       return false;

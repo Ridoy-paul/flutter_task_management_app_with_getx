@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../style.dart';
 
-void showSnackMessage(String message, [bool isErrorStatus = true]) {
+void showSnackMessage(String message, [bool successStatus = true]) {
   Get.snackbar(
-    isErrorStatus ? "Success" : "Error!",
+    successStatus ? "Success" : "Error!",
     message,
     snackPosition: SnackPosition.TOP,
-    backgroundColor: isErrorStatus ? colorGreen : colorRed,
+    backgroundColor: successStatus ? colorGreen : colorBlue,
     colorText: Colors.white,
     borderRadius: 10.0,
     isDismissible: true,
