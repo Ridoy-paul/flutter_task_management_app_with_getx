@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_management_app/ui/controllers/add_task_controller.dart';
 import 'ui/controllers/login_controller.dart';
 import 'package:get/get.dart';
 import 'ui/screens/splash_screen.dart';
@@ -59,5 +60,6 @@ class ControllerBinder extends Bindings {
   @override
   void dependencies() {
     Get.put(LoginController());
+    Get.put(AddTaskController());
   }
 }

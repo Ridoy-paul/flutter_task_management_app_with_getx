@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/data_network_caller/network_response.dart';
-import '../../data/utility/urls.dart';
+import '../controllers/add_task_controller.dart';
+import 'package:get/get.dart';
 import '../widgets/snack_message.dart';
 import '../../data/utility/helpers.dart';
 import '../widgets/body_background_widget.dart';
@@ -20,7 +19,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   final TextEditingController _subjectTEController = TextEditingController();
   final TextEditingController _descriptionTEController = TextEditingController();
   final GlobalKey<FormState> _addNewTaskFormKey = GlobalKey<FormState>();
-  bool _createInProgressStatus = false;
+  final AddTaskController _addTaskController = Get.find<AddTaskController>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         child: Column(
           children: [
             const ProfileSummery(),
-             Expanded(
+            Expanded(
               child: BodyBackgroundWidget(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -44,7 +43,10 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                           ),
                           Text(
                               "Add New Task",
-                              style: Theme.of(context).textTheme.titleLarge),
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleLarge),
                           const SizedBox(
                             height: 16,
                           ),
@@ -52,7 +54,9 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                             controller: _subjectTEController,
                             keyboardType: TextInputType.text,
                             decoration: inputStyle("Subject"),
-                            validator: (value) => inputValidate(value, "Please Enter The Subject!"),
+                            validator: (value) =>
+                                inputValidate(
+                                    value, "Please Enter The Subject!"),
                           ),
                           const SizedBox(
                             height: 15,
@@ -62,23 +66,28 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                             keyboardType: TextInputType.text,
                             maxLines: 8,
                             decoration: const InputDecoration(
-                              hintText: "Description"
+                                hintText: "Description"
                             ),
-                            validator: (value) => inputValidate(value, "Description is required!"),
+                            validator: (value) =>
+                                inputValidate(
+                                    value, "Description is required!"),
                           ),
                           const SizedBox(
                             height: 15,
                           ),
                           SizedBox(
                             width: double.infinity,
-                            child: Visibility(
-                              visible: _createInProgressStatus == false,
-                              replacement: circleProgressIndicatorShow(),
-                              child: ElevatedButton(
-                                onPressed: createTask,
-                                child: const Icon(Icons.arrow_circle_right_outlined),
-                              ),
-                            ),
+                            child: GetBuilder<AddTaskController>(builder: (addTaskController) {
+                              return Visibility(
+                                visible: !_addTaskController.createInProgressStatus,
+                                replacement: circleProgressIndicatorShow(),
+                                child: ElevatedButton(
+                                  onPressed: createTask,
+                                  child: const Icon(
+                                      Icons.arrow_circle_right_outlined),
+                                ),
+                              );
+                            }),
                           ),
                         ],
                       ),
@@ -95,10 +104,21 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
   /// This function used to create new task
   Future<void> createTask() async {
-    if(!_addNewTaskFormKey.currentState!.validate()) {
+    if (!_addNewTaskFormKey.currentState!.validate()) {
       return;
     }
 
+    final response = await _addTaskController.createTaskConfirm(
+        _subjectTEController.text.trim(), _descriptionTEController.text.trim());
+
+    if (response) {
+      _subjectTEController.clear();
+      _descriptionTEController.clear();
+    }
+
+    showSnackMessage(_addTaskController.message, _addTaskController.successStatus);
+
+    /*
     if(_addNewTaskFormKey.currentState!.validate()) {
       _createInProgressStatus = true;
       if(mounted) {
@@ -128,8 +148,9 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
            //showSnackMessage(context, "Something is wrong, Please try again!", true);
          }
        }
-      
     }
+    */
+
   }
 
   @override
