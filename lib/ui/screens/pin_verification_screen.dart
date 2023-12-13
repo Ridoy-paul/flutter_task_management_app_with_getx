@@ -141,7 +141,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       ),
     );
   }
-  
+
+
   Future<void> confirmPinVerification() async {
     if (_pinGlobalKey.currentState!.validate()) {
       _pinVerificationInProgressStatus = true;
