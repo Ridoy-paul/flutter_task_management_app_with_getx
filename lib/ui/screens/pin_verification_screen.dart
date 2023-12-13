@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_management_app/ui/controllers/forgot_password_pin_verification_controller.dart';
+import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/urls.dart';
 import '../widgets/snack_message.dart';
@@ -11,6 +13,7 @@ import '../widgets/body_background_widget.dart';
 
 class PinVerificationScreen extends StatefulWidget {
   const PinVerificationScreen({super.key, required this.email});
+
   final String email;
 
   @override
@@ -18,11 +21,10 @@ class PinVerificationScreen extends StatefulWidget {
 }
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
-
-  bool _pinVerificationInProgressStatus = false;
-
   final TextEditingController _pinTEController = TextEditingController();
   final GlobalKey<FormState> _pinGlobalKey = GlobalKey<FormState>();
+  final ForgotPasswordPinVerificationController _forgotPasswordPinVerificationController = Get
+      .find<ForgotPasswordPinVerificationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,10 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     ),
                     Text(
                       "PIN Verification",
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,
                     ),
                     const SizedBox(height: 10,),
                     const Text(
@@ -57,7 +62,9 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     ),
                     PinCodeTextField(
                       controller: _pinTEController,
-                      validator: (value) => inputValidate(value, "Enter 6 digit verification code!"),
+                      validator: (value) =>
+                          inputValidate(
+                              value, "Enter 6 digit verification code!"),
                       length: 6,
                       obscureText: false,
                       animationType: AnimationType.fade,
@@ -85,7 +92,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                         //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                         //but you can show anything you want here, like your pop up saying wrong paste format or etc
                         return true;
-                      }, appContext: context,
+                      },
+                      appContext: context,
                     ),
                     const SizedBox(
                       height: 15,
@@ -93,17 +101,20 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility(
-                        visible: !_pinVerificationInProgressStatus,
-                        replacement: circleProgressIndicatorShow(),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            confirmPinVerification();
-                            //Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen() ));
-                          },
-                          child: const Text("Verify", style: TextStyle(fontSize: 16),),
-                        ),
-                      ),
+                      child: GetBuilder<ForgotPasswordPinVerificationController>(builder: (controller) {
+                        return Visibility(
+                          visible: !controller.pinVerificationInProgressStatus,
+                          replacement: circleProgressIndicatorShow(),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              confirmPinVerification();
+                              //Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen() ));
+                            },
+                            child: const Text(
+                              "Verify", style: TextStyle(fontSize: 16),),
+                          ),
+                        );
+                      }),
                     ),
                     const SizedBox(height: 18,),
                     Center(
@@ -120,7 +131,10 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(builder: (
+                                      context) => const LoginScreen()), (
+                                      route) => false);
                             },
                             child: Text(
                               "Sign In",
@@ -144,7 +158,22 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
 
   Future<void> confirmPinVerification() async {
-    if (_pinGlobalKey.currentState!.validate()) {
+    if (!_pinGlobalKey.currentState!.validate()) {
+      return;
+    }
+
+    final response = await _forgotPasswordPinVerificationController
+        .pinVerificationConfirm(widget.email, _pinTEController.text);
+    showSnackMessage(_forgotPasswordPinVerificationController.message,
+        _forgotPasswordPinVerificationController.successStatus);
+    if (response) {
+      Get.to(ResetPasswordScreen(
+        email: widget.email, code: _pinTEController.text,));
+    }
+
+
+    /*
+    /// old method code.
       _pinVerificationInProgressStatus = true;
       if (mounted) {
         setState(() {});
@@ -174,7 +203,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       if (mounted) {
         setState(() {});
       }
-    }
+     */
   }
-  
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ui/controllers/forgot_password_pin_verification_controller.dart';
 import 'ui/controllers/add_task_controller.dart';
 import 'ui/controllers/forgot_password_email_verify_controller.dart';
 import 'ui/controllers/sign_up_controller.dart';
@@ -65,5 +66,7 @@ class ControllerBinder extends Bindings {
     Get.put(AddTaskController());
     Get.put(SignUpController());
     Get.put(ForgotPasswordEmailVerifyController());
+    Get.put(ForgotPasswordPinVerificationController());
+
   }
 }
