@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task_management_app/ui/controllers/forgot_password_pin_verification_controller.dart';
 import 'package:get/get.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/utility/urls.dart';
 import '../widgets/snack_message.dart';
 import '../../data/utility/helpers.dart';
 import 'login_screen.dart';
