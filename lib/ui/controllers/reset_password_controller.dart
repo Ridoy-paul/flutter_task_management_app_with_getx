@@ -8,18 +8,18 @@ class ReSetPasswordController extends GetxController {
   String _message = '';
   bool _successStatus = true;
 
-  bool get loginInProgress => _resetPasswordInProgressStatus;
+  bool get resetPasswordInProgressStatus => _resetPasswordInProgressStatus;
   String get message => _message;
   bool get successStatus => _successStatus;
 
-  Future<bool> _resetPasswordConfirm(String email, String otp, String password, String confirmPassword) async {
+  Future<bool> resetPasswordConfirm(String email, String otp, String password, String confirmPassword) async {
       _resetPasswordInProgressStatus = true;
       update();
 
       if (password != confirmPassword) {
         _message = "Password doesn't match!";
         _successStatus = false;
-        _resetPasswordInProgressStatus = true;
+        _resetPasswordInProgressStatus = false;
         update();
         return false;
       }

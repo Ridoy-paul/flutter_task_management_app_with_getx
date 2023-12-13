@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/data_network_caller/network_response.dart';
+import '../controllers/reset_password_controller.dart';
+import 'package:get/get.dart';
 import '../../data/utility/helpers.dart';
-import '../../data/utility/urls.dart';
 import '../widgets/snack_message.dart';
 import 'login_screen.dart';
 import '../style.dart';
 import '../widgets/body_background_widget.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key, required this.email, required this.code});
+  const ResetPasswordScreen(
+      {super.key, required this.email, required this.code});
+
   final String email;
   final String code;
 
@@ -19,10 +20,10 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
-  bool _resetPasswordInProgressStatus = false;
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _confirmPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _resetPasswordGlobalKey = GlobalKey<FormState>();
+  final ReSetPasswordController _reSetPasswordController = Get.find<ReSetPasswordController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     Text(
                       "Set Password",
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,
                     ),
                     const SizedBox(height: 10,),
                     const Text(
@@ -60,7 +64,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       obscureText: true,
                       keyboardType: TextInputType.text,
                       decoration: inputStyle("Password"),
-                      validator: (value) => inputValidate(value, "Enter your password!"),
+                      validator: (value) =>
+                          inputValidate(value, "Enter your password!"),
                     ),
                     const SizedBox(
                       height: 15,
@@ -70,7 +75,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       obscureText: true,
                       keyboardType: TextInputType.text,
                       decoration: inputStyle("Confirm Password"),
-                      validator: (value) => inputValidate(value, "Confirm Your Password!"),
+                      validator: (value) =>
+                          inputValidate(value, "Confirm Your Password!"),
                     ),
                     const SizedBox(
                       height: 15,
@@ -78,14 +84,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility(
-                        visible: !_resetPasswordInProgressStatus,
-                        replacement: circleProgressIndicatorShow(),
-                        child: ElevatedButton(
-                          onPressed: _resetPasswordConfirm,
-                          child: const Text("Confirm", style: TextStyle(fontSize: 16),),
-                        ),
-                      ),
+                      child: GetBuilder<ReSetPasswordController>(builder: (controller) {
+                        return Visibility(
+                          visible: !controller.resetPasswordInProgressStatus,
+                          replacement: circleProgressIndicatorShow(),
+                          child: ElevatedButton(
+                            onPressed: _resetPassword,
+                            child: const Text(
+                              "Confirm", style: TextStyle(fontSize: 16),),
+                          ),
+                        );
+                      }),
                     ),
                     const SizedBox(height: 18,),
                     Center(
@@ -102,7 +111,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
+                              Get.to(const LoginScreen());
                             },
                             child: Text(
                               "Sign In",
@@ -124,8 +133,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 
-  Future<void> _resetPasswordConfirm() async {
-    if(_resetPasswordGlobalKey.currentState!.validate()) {
+  Future<void> _resetPassword() async {
+    if (!_resetPasswordGlobalKey.currentState!.validate()) {
+      return;
+    }
+
+    final response = await _reSetPasswordController.resetPasswordConfirm(
+        widget.email,
+        widget.code,
+        _passwordTEController.text,
+        _confirmPasswordTEController.text
+    );
+
+    showSnackMessage(_reSetPasswordController.message, _reSetPasswordController.successStatus);
+
+    if (response) {
+      Get.to(const LoginScreen());
+    }
+
+    /*
       if(mounted) {
         setState(() {
           _resetPasswordInProgressStatus = true;
@@ -171,6 +197,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         });
       }
     }
+         */
   }
-
 }
