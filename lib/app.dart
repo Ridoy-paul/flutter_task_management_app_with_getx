@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_management_app/ui/controllers/add_task_controller.dart';
-import 'package:flutter_task_management_app/ui/controllers/sign_up_controller.dart';
+import 'ui/controllers/add_task_controller.dart';
+import 'ui/controllers/forgot_password_email_verify_controller.dart';
+import 'ui/controllers/sign_up_controller.dart';
 import 'ui/controllers/login_controller.dart';
 import 'package:get/get.dart';
 import 'ui/screens/splash_screen.dart';
@@ -63,5 +64,6 @@ class ControllerBinder extends Bindings {
     Get.put(LoginController());
     Get.put(AddTaskController());
     Get.put(SignUpController());
+    Get.put(ForgotPasswordEmailVerifyController());
   }
 }

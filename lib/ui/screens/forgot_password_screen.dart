@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import '../controllers/forgot_password_email_verify_controller.dart';
 import 'package:get/get.dart';
-import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/helpers.dart';
-import '../../data/utility/urls.dart';
 import '../widgets/snack_message.dart';
 import 'login_screen.dart';
 import 'pin_verification_screen.dart';
@@ -17,11 +16,10 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
-  bool _forgotPasswordInProgressStatus = false;
-
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _forgotPasswordFormKey = GlobalKey<FormState>();
+  final ForgotPasswordEmailVerifyController _forgotPasswordEmailVerifyController = Get
+      .find<ForgotPasswordEmailVerifyController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     Text(
                       "Your Email Address",
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,
                     ),
                     const SizedBox(height: 10,),
                     const Text(
@@ -58,7 +59,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       controller: _emailTEController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: inputStyle("Email"),
-                      validator: (value) => inputValidate(value, "Email is required!"),
+                      validator: (value) =>
+                          inputValidate(value, "Email is required!"),
                     ),
                     const SizedBox(
                       height: 15,
@@ -66,16 +68,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: Visibility(
-                        visible: !_forgotPasswordInProgressStatus,
-                        replacement: circleProgressIndicatorShow(),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            forgotPasswordSubmit();
-                          },
-                          child: const Icon(Icons.arrow_circle_right_outlined),
-                        ),
-                      ),
+                      child: GetBuilder<ForgotPasswordEmailVerifyController>(builder: (forgotPasswordEmailVerifyController) {
+                        return Visibility(
+                          visible: !forgotPasswordEmailVerifyController.forgotPasswordInProgressStatus,
+                          replacement: circleProgressIndicatorShow(),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              forgotPasswordSubmit();
+                            },
+                            child: const Icon(
+                                Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }),
                     ),
                     const SizedBox(height: 48,),
                     Center(
@@ -85,9 +90,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           const Text(
                             "Already have an account?",
                             style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: colorGray,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: colorGray,
                             ),
                           ),
                           TextButton(
@@ -97,7 +102,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             child: Text(
                               "Sign In",
                               style: TextStyle(
-                                  color: Colors.green.shade300, fontSize: 16,
+                                color: Colors.green.shade300, fontSize: 16,
                               ),
                             ),
                           ),
@@ -121,8 +126,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<void> forgotPasswordSubmit() async {
-    if(_forgotPasswordFormKey.currentState!.validate()) {
+    if (!_forgotPasswordFormKey.currentState!.validate()) {
+      return;
+    }
 
+    final response = await _forgotPasswordEmailVerifyController
+        .forgotPasswordConfirm(_emailTEController.text.trim());
+
+    showSnackMessage(_forgotPasswordEmailVerifyController.message,
+        _forgotPasswordEmailVerifyController.successStatus);
+    if (response) {
+      Get.to(PinVerificationScreen(email: _emailTEController.text.trim(),));
+    }
+
+    /*
       _forgotPasswordInProgressStatus = true;
       if (mounted) {
         setState(() {});
@@ -152,10 +169,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (mounted) {
         setState(() {});
       }
+     */
 
-    }
   }
-
-
-
 }
