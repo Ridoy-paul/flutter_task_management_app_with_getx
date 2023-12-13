@@ -163,8 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _clearTextFields();
     }
 
-    showSnackMessage(
-        _signUpController.message, _signUpController.successStatus);
+    showSnackMessage(_signUpController.message, _signUpController.successStatus);
 
     /*
     // Old method code ----------->>>>>>>>>>>>>>>>>>>>>>>
