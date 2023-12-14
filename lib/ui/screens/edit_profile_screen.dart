@@ -42,7 +42,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
