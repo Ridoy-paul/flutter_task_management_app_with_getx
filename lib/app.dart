@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_management_app/ui/controllers/auth_controller.dart';
-import 'package:flutter_task_management_app/ui/controllers/profile_update_controller.dart';
-import 'package:flutter_task_management_app/ui/controllers/reset_password_controller.dart';
-import 'package:flutter_task_management_app/ui/controllers/task_count_summery_controller.dart';
-import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
+import 'ui/controllers/auth_controller.dart';
+import 'ui/controllers/profile_update_controller.dart';
+import 'ui/controllers/reset_password_controller.dart';
+import 'ui/controllers/task_count_summery_controller.dart';
+import 'ui/controllers/task_screen_controller.dart';
+import 'ui/controllers/update_task_controller.dart';
 import 'ui/controllers/forgot_password_pin_verification_controller.dart';
 import 'ui/controllers/add_task_controller.dart';
 import 'ui/controllers/forgot_password_email_verify_controller.dart';
@@ -77,6 +78,8 @@ class ControllerBinder extends Bindings {
     Get.put(ProfileUpdateController());
     Get.put(TaskScreenController());
     Get.put(TaskCountSummeryController());
+    Get.put(UpdateTaskController());
+
 
 
   }

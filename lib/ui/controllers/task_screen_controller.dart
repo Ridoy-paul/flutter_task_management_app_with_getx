@@ -7,8 +7,12 @@ import '../../data/utility/urls.dart';
 class TaskScreenController extends GetxController {
   TaskListModel _taskListModel = TaskListModel();
   bool _getTaskScreenInProgress = false;
+  String _message = '';
+  bool _successStatus = true;
 
   bool get getTaskScreenInProgress => _getTaskScreenInProgress;
+  String get message => _message;
+  bool get successStatus => _successStatus;
   TaskListModel get taskListModel => _taskListModel;
 
   Future<bool> getTaskList(String taskType) async {
@@ -24,6 +28,25 @@ class TaskScreenController extends GetxController {
       _taskListModel = TaskListModel.fromJson(response.jsonResponse);
       return true;
     }
+    return false;
+  }
+
+  Future<bool> updateTaskStatus(String taskID, String status) async {
+    _getTaskScreenInProgress = true;
+    update();
+
+    final response = await NetworkCaller().getRequest(Urls.updateTaskStatus(taskID, status));
+
+    _getTaskScreenInProgress = false;
+    update();
+    if(response.isSuccess) {
+      _message = "Task Status Update.";
+      _successStatus = true;
+      return true;
+    }
+
+    _message = "Task Status can not Updated.";
+    _successStatus = false;
     return false;
   }
 

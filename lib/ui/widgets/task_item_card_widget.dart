@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
+import 'package:flutter_task_management_app/ui/widgets/snack_message.dart';
 import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/urls.dart';
@@ -30,17 +32,19 @@ class TaskItemCard extends StatefulWidget {
 
 class _TaskItemCardState extends State<TaskItemCard> {
 
+  final TaskScreenController _taskScreenController = Get.find<TaskScreenController>();
+
   /// Function for Update Task Status
-  Future<void> updateTaskStatus(String status) async {
-    widget.showProgress(true);
-
-    final response = await NetworkCaller().getRequest(Urls.updateTaskStatus(widget.task.sId ?? '', status));
-    if(response.isSuccess) {
-      widget.onStatusChange();
-    }
-
-    //widget.showProgress(false);
-  }
+  // Future<void> updateTaskStatus(String status) async {
+  //   widget.showProgress(true);
+  //
+  //   final response = await NetworkCaller().getRequest(Urls.updateTaskStatus(widget.task.sId ?? '', status));
+  //   if(response.isSuccess) {
+  //     widget.onStatusChange();
+  //   }
+  //
+  //   //widget.showProgress(false);
+  // }
 
   /// Function for delete Task Item
   Future<void> deleteTaskItem(String taskId) async {
@@ -56,6 +60,7 @@ class _TaskItemCardState extends State<TaskItemCard> {
 
   @override
   Widget build(BuildContext context) {
+
 
     Color statusBgColor = colorBlue;
     if(widget.task.status == 'Progress') {
@@ -100,7 +105,7 @@ class _TaskItemCardState extends State<TaskItemCard> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        showUpdateStatusModal(widget.task.status ?? '');
+                        showUpdateStatusModal(widget.task.sId ?? '', widget.task.status ?? '');
                       },
                       icon: const Icon(Icons.edit_calendar_rounded, color: colorGreen,),
                     ),
@@ -125,15 +130,18 @@ class _TaskItemCardState extends State<TaskItemCard> {
 
   }
 
-  void showUpdateStatusModal(String status) {
+  void showUpdateStatusModal(String taskID, String status) {
 
     List<Container> items = TaskStatus.values.map((e) => Container(
       margin: const EdgeInsets.symmetric(vertical: 3),
       child: ListTile(
-        onTap: () {
-          updateTaskStatus(e.name);
+        onTap: () async {
+           final response = await _taskScreenController.updateTaskStatus(taskID, e.name);
+           if(response) {
+             widget.onStatusChange();
+           }
+          //updateTaskStatus(e.name);
           Get.back();
-          //Navigator.pop(context);
         },
         tileColor: status == e.name ? colorGreen : colorWhite,
         shape: RoundedRectangleBorder(
