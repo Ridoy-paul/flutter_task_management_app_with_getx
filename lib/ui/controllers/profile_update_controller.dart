@@ -52,7 +52,7 @@ class ProfileUpdateController extends GetxController {
         firstName: firstName,
         lastName: lastName,
         mobile: mobile,
-        photo: photoInBase64 ?? AuthController.user?.photo,
+        photo: photoInBase64 ?? Get.find<AuthController>().user?.photo,
       ));
 
       _message = "Profile Updated.";

@@ -20,47 +20,56 @@ class ProfileSummery extends StatefulWidget {
 }
 
 class _ProfileSummeryState extends State<ProfileSummery> {
+  final AuthController _authController = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
+    Uint8List imageBytes = const Base64Decoder().convert(
+        _authController.user?.photo ?? '');
 
-    Uint8List imageBytes = const Base64Decoder().convert(AuthController.user?.photo ?? '');
-
-    return ListTile(
-      onTap: () {
-        if(widget.enableOnTap) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfileScreen(),),);
-        }
-      },
-      leading: CircleAvatar(
-        child: AuthController.user?.photo == null
-            ? const Icon(Icons.person)
-            : ClipRRect(
+    return GetBuilder<AuthController>(
+        builder: (authController) {
+          return ListTile(
+            onTap: () {
+              if (widget.enableOnTap) {
+                Get.to(const EditProfileScreen());
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfileScreen(),),);
+              }
+            },
+            leading: CircleAvatar(
+              child: _authController.user?.photo == null
+                  ? const Icon(Icons.person)
+                  : ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Image.memory(imageBytes, fit: BoxFit.cover,),
               ),
-      ),
-      title: Text(
-        fullName,
-        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w700),
-      ),
-      subtitle: Text(AuthController.user?.email ?? '', style: const TextStyle(color: colorWhite),),
-      trailing: IconButton(
-        onPressed: () async{
-          await Get.find<AuthController>().clearAuthData();
-          if(mounted) {
-            Get.offAll(const LoginScreen());
-          }
-        },
-        color: colorWhite,
-        icon: const Icon(Icons.logout),
-      ),
-      tileColor: colorGreen,
-    );
+            ),
+            title: Text(
+              fullName,
+              style: const TextStyle(
+                  color: colorWhite, fontWeight: FontWeight.w700),
+            ),
+            subtitle: Text(_authController.user?.email ?? '',
+              style: const TextStyle(color: colorWhite),),
+            trailing: IconButton(
+              onPressed: () async {
+                await Get.find<AuthController>().clearAuthData();
+                if (mounted) {
+                  Get.offAll(const LoginScreen());
+                }
+              },
+              color: colorWhite,
+              icon: const Icon(Icons.logout),
+            ),
+            tileColor: colorGreen,
+          );
+        });
   }
 
   // Get the full name from AuthController
   String get fullName {
-    return '${AuthController.user?.firstName ?? ''} ${AuthController.user?.lastName ?? ''}';
+    return '${_authController.user?.firstName ?? ''} ${_authController.user
+        ?.lastName ?? ''}';
   }
 
 }

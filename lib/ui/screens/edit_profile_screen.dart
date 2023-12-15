@@ -27,14 +27,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _updateProfileGlobalKey = GlobalKey<FormState>();
   final ProfileUpdateController _profileUpdateController = Get.find<ProfileUpdateController>();
+  final AuthController _authController = Get.find<AuthController>();
 
   @override
   void initState() {
     super.initState();
-    _emailTEController.text = AuthController.user?.email ?? '';
-    _firstNameTEController.text = AuthController.user?.firstName ?? '';
-    _lastNameTEController.text = AuthController.user?.lastName ?? '';
-    _mobileTEController.text = AuthController.user?.mobile ?? '';
+    _emailTEController.text = _authController.user?.email ?? '';
+    _firstNameTEController.text = _authController.user?.firstName ?? '';
+    _lastNameTEController.text = _authController.user?.lastName ?? '';
+    _mobileTEController.text = _authController.user?.mobile ?? '';
   }
 
 
@@ -144,7 +145,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    final response = _profileUpdateController.updateUserProfileConfirm(
+    _profileUpdateController.updateUserProfileConfirm(
         _emailTEController.text.trim(), _firstNameTEController.text.trim(),
         _lastNameTEController.text.trim(), _mobileTEController.text.trim(),
         photo, _passwordTEController.text);

@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/user_model.dart';
 
 class AuthController  extends GetxController{
-  static String? token;
-  static UserModel? user;
+  String? token;
+  UserModel? user;
 
 
   Future<void> saveUserInformation(String t, UserModel model) async {

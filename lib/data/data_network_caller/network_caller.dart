@@ -21,7 +21,7 @@ class NetworkCaller {
       final response =
           await post(Uri.parse(url), body: jsonEncode(body), headers: {
         'Content-type': 'Application/json',
-            'token': AuthController.token.toString(),
+            'token': Get.find<AuthController>().token.toString(),
       });
 
       /// This is used for show console log
@@ -68,7 +68,7 @@ class NetworkCaller {
       final response =
       await get(Uri.parse(url), headers: {
         'Content-type': 'Application/json',
-        'token': AuthController.token.toString(),
+        'token': Get.find<AuthController>().token.toString(),
       });
 
       /// This is used for show console log
