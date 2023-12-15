@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_management_app/ui/controllers/auth_controller.dart';
 import 'package:flutter_task_management_app/ui/controllers/profile_update_controller.dart';
 import 'package:flutter_task_management_app/ui/controllers/reset_password_controller.dart';
 import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
@@ -65,6 +66,7 @@ class TaskManagementApp extends StatelessWidget {
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
+    Get.put(AuthController());
     Get.put(LoginController());
     Get.put(AddTaskController());
     Get.put(SignUpController());

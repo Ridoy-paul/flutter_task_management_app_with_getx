@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../app.dart';
 import '../../ui/screens/login_screen.dart';
 import '../../ui/controllers/auth_controller.dart';
@@ -13,11 +14,11 @@ class NetworkCaller {
   Future<NetworkResponse> postRequest(String url, {Map<String, dynamic>? body, bool isLogin = false}) async {
 
     /// This is used for show console log
-    log(url);
-    log(body.toString());
+    //log(url);
+    //log(body.toString());
 
     try {
-      final Response response =
+      final response =
           await post(Uri.parse(url), body: jsonEncode(body), headers: {
         'Content-type': 'Application/json',
             'token': AuthController.token.toString(),
@@ -64,7 +65,7 @@ class NetworkCaller {
     log(url);
 
     try {
-      final Response response =
+      final response =
       await get(Uri.parse(url), headers: {
         'Content-type': 'Application/json',
         'token': AuthController.token.toString(),
@@ -105,7 +106,7 @@ class NetworkCaller {
 
   /// This function is used for backTologin, when token is expired.
   Future<void> backToLogin() async {
-    await AuthController.clearAuthData();
+    await Get.find<AuthController>().clearAuthData();
     Navigator.pushAndRemoveUntil(TaskManagementApp.navigationKey.currentContext!, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
   }
 

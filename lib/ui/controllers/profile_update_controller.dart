@@ -47,7 +47,7 @@ class ProfileUpdateController extends GetxController {
     update();
 
     if(response.isSuccess) {
-      AuthController.updateUserInformation(UserModel(
+      Get.find<AuthController>().updateUserInformation(UserModel(
         email: email,
         firstName: firstName,
         lastName: lastName,

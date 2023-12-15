@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void goToLogin() async{
-    final bool isLoggedIn = await AuthController.checkAuthState();
+    final bool isLoggedIn = await Get.find<AuthController>().checkAuthState();
 
     Future.delayed(const Duration(seconds: 2)).then((value) => {
       Get.offAll(isLoggedIn? const MainBottomNavScreen() : const LoginScreen()),

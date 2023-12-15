@@ -46,9 +46,9 @@ class _ProfileSummeryState extends State<ProfileSummery> {
       subtitle: Text(AuthController.user?.email ?? '', style: const TextStyle(color: colorWhite),),
       trailing: IconButton(
         onPressed: () async{
-          await AuthController.clearAuthData();
+          await Get.find<AuthController>().clearAuthData();
           if(mounted) {
-            Get.to(const LoginScreen());
+            Get.offAll(const LoginScreen());
           }
         },
         color: colorWhite,

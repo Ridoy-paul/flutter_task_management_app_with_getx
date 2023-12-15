@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
+import '../controllers/task_screen_controller.dart';
 import 'package:flutter_task_management_app/ui/style.dart';
 import 'package:get/get.dart';
 import 'profile_summery_card_widget.dart';
@@ -77,7 +77,6 @@ class _TaskScreenState extends State<TaskScreen> {
   void initState() {
     super.initState();
     _taskScreenController.getTaskList(widget.taskType);
-    //getTaskList();
 
     if (widget.taskType == "New") {
       getTaskCountSummeryList();
@@ -165,8 +164,8 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
       floatingActionButton: widget.taskType == "New" ? FloatingActionButton(
         onPressed: () async {
-          await Navigator.push(context, MaterialPageRoute(
-            builder: (context) => const AddNewTaskScreen(),),);
+          await Get.to(const AddNewTaskScreen());
+          //await Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNewTaskScreen(),),);
 
           /// This code will run when coming back from add task screen.
           if (widget.taskType == "New") {

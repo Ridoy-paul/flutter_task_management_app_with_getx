@@ -12,7 +12,6 @@ class TaskScreenController extends GetxController {
   TaskListModel get taskListModel => _taskListModel;
 
   Future<bool> getTaskList(String taskType) async {
-
     _getTaskScreenInProgress = true;
     update();
 
