@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../screens/edit_profile_screen.dart';
 import '../screens/login_screen.dart';
@@ -47,7 +48,7 @@ class _ProfileSummeryState extends State<ProfileSummery> {
         onPressed: () async{
           await AuthController.clearAuthData();
           if(mounted) {
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
+            Get.to(const LoginScreen());
           }
         },
         color: colorWhite,

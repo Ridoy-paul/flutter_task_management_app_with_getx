@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
 import 'package:flutter_task_management_app/ui/style.dart';
+import 'package:get/get.dart';
 import 'profile_summery_card_widget.dart';
 import '../../data/models/task_count.dart';
 import '../../data/models/task_summery_count_summery_model.dart';
@@ -14,6 +16,7 @@ import '../../data/utility/urls.dart';
 
 class TaskScreen extends StatefulWidget {
   final String taskType;
+
   const TaskScreen({Key? key, required this.taskType}) : super(key: key);
 
   @override
@@ -26,8 +29,16 @@ class _TaskScreenState extends State<TaskScreen> {
 
   TaskListModel taskListModel = TaskListModel();
   TaskCountSummeryListModel taskCountSummeryListModel = TaskCountSummeryListModel();
+  final TaskScreenController _taskScreenController = Get.find<
+      TaskScreenController>();
 
   Future<void> getTaskList() async {
+    final response = _taskScreenController.getTaskList(widget.taskType);
+
+    print(response);
+    //taskListModel = TaskListModel.fromJson(response);
+
+    /*
     setState(() {
       _getTaskInProgress = true;
     });
@@ -41,6 +52,7 @@ class _TaskScreenState extends State<TaskScreen> {
     setState(() {
       _getTaskInProgress = false;
     });
+     */
   }
 
   Future<void> getTaskCountSummeryList() async {
@@ -53,7 +65,8 @@ class _TaskScreenState extends State<TaskScreen> {
     final NetworkResponse response =
     await NetworkCaller().getRequest(Urls.getTaskStatusCount);
     if (response.isSuccess) {
-      taskCountSummeryListModel = TaskCountSummeryListModel.fromJson(response.jsonResponse);
+      taskCountSummeryListModel =
+          TaskCountSummeryListModel.fromJson(response.jsonResponse);
     }
 
     _getTaskCountSummeryInProgress = false;
@@ -97,9 +110,11 @@ class _TaskScreenState extends State<TaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: taskCountSummeryListModel.taskCountList?.length ?? 0,
+                    itemCount: taskCountSummeryListModel.taskCountList
+                        ?.length ?? 0,
                     itemBuilder: (context, index) {
-                      TaskCount taskCount = taskCountSummeryListModel.taskCountList![index];
+                      TaskCount taskCount = taskCountSummeryListModel
+                          .taskCountList![index];
                       return FittedBox(
                         child: SummeryCard(
                           title: taskCount.sId ?? '',
@@ -114,35 +129,37 @@ class _TaskScreenState extends State<TaskScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: getTaskList,
-                child: Visibility(
-                  visible: _getTaskInProgress == false,
-                  replacement: circleProgressIndicatorShow(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: taskListModel.taskList?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return TaskItemCard(
-                          task: taskListModel.taskList![index],
-                          onStatusChange: () {
-                            getTaskList();
-                            if(widget.taskType == "New") {
-                              getTaskCountSummeryList();
-                            }
-                          },
-                          showProgress: (inProgress) {
-                            setState(() {
-                              _getTaskInProgress = inProgress;
-                            });
-                            // if (!inProgress) {
-                            //   showSnackMessage(context, "Task Status Updated.");
-                            // }
-                          },
-                        );
-                      },
+                child: GetBuilder<TaskScreenController>(builder: (taskScController) {
+                  return Visibility(
+                    visible: !taskScController.getTaskScreenInProgress,
+                    replacement: circleProgressIndicatorShow(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        itemCount: taskListModel.taskList?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return TaskItemCard(
+                            task: taskListModel.taskList![index],
+                            onStatusChange: () {
+                              getTaskList();
+                              if (widget.taskType == "New") {
+                                getTaskCountSummeryList();
+                              }
+                            },
+                            showProgress: (inProgress) {
+                              setState(() {
+                                _getTaskInProgress = inProgress;
+                              });
+                              // if (!inProgress) {
+                              //   showSnackMessage(context, "Task Status Updated.");
+                              // }
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
             ),
           ],
@@ -150,13 +167,14 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
       floatingActionButton: widget.taskType == "New" ? FloatingActionButton(
         onPressed: () async {
-           await Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNewTaskScreen(),),);
+          await Navigator.push(context, MaterialPageRoute(
+            builder: (context) => const AddNewTaskScreen(),),);
 
-           /// This code will run when coming back from add task screen.
-           if (widget.taskType == "New") {
-             getTaskCountSummeryList();
-           }
-           getTaskList();
+          /// This code will run when coming back from add task screen.
+          if (widget.taskType == "New") {
+            getTaskCountSummeryList();
+          }
+          getTaskList();
         },
         child: const Icon(Icons.add),
       ) : null,
