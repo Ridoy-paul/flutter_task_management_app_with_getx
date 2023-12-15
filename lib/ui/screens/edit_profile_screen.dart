@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../controllers/profile_update_controller.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../data/models/user_model.dart';
 import '../widgets/snack_message.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/data_network_caller/network_response.dart';
-import '../../data/utility/urls.dart';
 import '../../data/utility/helpers.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/body_background_widget.dart';
@@ -23,14 +20,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   XFile? photo;
 
-  bool _updateProfileInProgressStatus = false;
-
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _updateProfileGlobalKey = GlobalKey<FormState>();
+  final ProfileUpdateController _profileUpdateController = Get.find<ProfileUpdateController>();
 
   @override
   void initState() {
@@ -65,7 +61,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         Text(
                           "Update Profile",
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .titleLarge,
                         ),
                         const SizedBox(
                           height: 16,
@@ -78,28 +77,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           controller: _emailTEController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: inputStyle("Email"),
-                          validator: (value) => inputValidate(value, "Email is Required!"),
+                          validator: (value) =>
+                              inputValidate(value, "Email is Required!"),
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
                           controller: _firstNameTEController,
                           keyboardType: TextInputType.text,
                           decoration: inputStyle("First Name"),
-                          validator: (value) => inputValidate(value, "First name is required!"),
+                          validator: (value) =>
+                              inputValidate(value, "First name is required!"),
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
                           controller: _lastNameTEController,
                           keyboardType: TextInputType.text,
                           decoration: inputStyle("Last Name"),
-                          validator: (value) => inputValidate(value, "last name is required!"),
+                          validator: (value) =>
+                              inputValidate(value, "last name is required!"),
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
                           controller: _mobileTEController,
                           keyboardType: TextInputType.phone,
                           decoration: inputStyle("Mobile"),
-                          validator: (value) => inputValidate(value, "Phone number is required!"),
+                          validator: (value) =>
+                              inputValidate(value, "Phone number is required!"),
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
@@ -112,14 +115,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         SizedBox(
                           width: double.infinity,
-                          child: Visibility(
-                            visible: !_updateProfileInProgressStatus,
-                            replacement: circleProgressIndicatorShow(),
-                            child: ElevatedButton(
-                              onPressed: updateUserProfile,
-                              child: const Icon(Icons.arrow_circle_right_outlined),
-                            ),
-                          ),
+                          child: GetBuilder<ProfileUpdateController>(builder: (controller) {
+                            return Visibility(
+                              visible: !controller.updateProfileInProgressStatus,
+                              replacement: circleProgressIndicatorShow(),
+                              child: ElevatedButton(
+                                onPressed: updateUserProfile,
+                                child: const Icon(
+                                    Icons.arrow_circle_right_outlined),
+                              ),
+                            );
+                          }),
                         ),
                       ],
                     ),
@@ -134,14 +140,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> updateUserProfile() async {
-    if(!_updateProfileGlobalKey.currentState!.validate()) {
+    if (!_updateProfileGlobalKey.currentState!.validate()) {
       return;
     }
 
+    final response = _profileUpdateController.updateUserProfileConfirm(
+        _emailTEController.text.trim(), _firstNameTEController.text.trim(),
+        _lastNameTEController.text.trim(), _mobileTEController.text.trim(),
+        photo, _passwordTEController.text);
+    showSnackMessage(_profileUpdateController.message,
+        _profileUpdateController.successStatus);
+
+    /*
     _updateProfileInProgressStatus = true;
     if (mounted) {
       setState(() {});
     }
+
 
     String? photoInBase64;
 
@@ -188,8 +203,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         //showSnackMessage(context, "Network Error! Please try again.", true);
       }
     }
+     */
   }
-
 
 
   Container photoPickerField() {
@@ -226,10 +241,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             flex: 3,
             child: InkWell(
               onTap: () async {
-                final XFile? image = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 30);
-                if(image != null) {
+                final XFile? image = await ImagePicker().pickImage(
+                    source: ImageSource.camera, imageQuality: 30);
+                if (image != null) {
                   photo = image;
-                  if(mounted) {
+                  if (mounted) {
                     setState(() {});
                   }
                 }

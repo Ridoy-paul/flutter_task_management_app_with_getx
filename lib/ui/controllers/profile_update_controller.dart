@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/data_network_caller/network_response.dart';
 import '../../data/models/user_model.dart';
@@ -16,7 +17,7 @@ class ProfileUpdateController extends GetxController {
   String get message => _message;
   bool get successStatus => _successStatus;
 
-  Future<bool> updateUserProfileConfirm(String email, String firstName, String lastName, String mobile, String? photo, String? password) async {
+  Future<bool> updateUserProfileConfirm(String email, String firstName, String lastName, String mobile, XFile? photo, String? password) async {
 
     _updateProfileInProgressStatus = true;
     update();
@@ -35,7 +36,7 @@ class ProfileUpdateController extends GetxController {
     }
 
     if(photo != null) {
-      List<int> imageBytes = await photo!.readAsBytes();
+      List<int> imageBytes = await photo.readAsBytes();
       photoInBase64 = base64Encode(imageBytes);
       inputData['photo'] = photoInBase64;
     }
