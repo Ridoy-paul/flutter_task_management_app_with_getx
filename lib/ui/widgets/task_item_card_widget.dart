@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
+import '../controllers/task_screen_controller.dart';
 import 'package:get/get.dart';
-import '../../data/data_network_caller/network_caller.dart';
-import '../../data/utility/urls.dart';
 import '../../data/models/task.dart';
 import '../style.dart';
 
