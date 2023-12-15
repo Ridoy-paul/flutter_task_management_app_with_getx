@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task_management_app/ui/controllers/task_screen_controller.dart';
-import 'package:flutter_task_management_app/ui/widgets/snack_message.dart';
 import 'package:get/get.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/utility/urls.dart';
@@ -47,16 +46,16 @@ class _TaskItemCardState extends State<TaskItemCard> {
   // }
 
   /// Function for delete Task Item
-  Future<void> deleteTaskItem(String taskId) async {
-    widget.showProgress(true);
-
-    final response = await NetworkCaller().getRequest(Urls.deleteTaskItem(widget.task.sId ?? ''));
-    if(response.isSuccess) {
-      widget.onStatusChange();
-    }
-
-    //widget.showProgress(false);
-  }
+  // Future<void> deleteTaskItem(String taskId) async {
+  //   widget.showProgress(true);
+  //
+  //   final response = await NetworkCaller().getRequest(Urls.deleteTaskItem(widget.task.sId ?? ''));
+  //   if(response.isSuccess) {
+  //     widget.onStatusChange();
+  //   }
+  //
+  //   //widget.showProgress(false);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -110,8 +109,11 @@ class _TaskItemCardState extends State<TaskItemCard> {
                       icon: const Icon(Icons.edit_calendar_rounded, color: colorGreen,),
                     ),
                     IconButton(
-                      onPressed: () {
-                        deleteTaskItem(widget.task.sId ?? '');
+                      onPressed: () async {
+                        final response = await _taskScreenController.deleteTaskItem(widget.task.sId ?? '');
+                        if(response) {
+                          widget.onStatusChange();
+                        }
                       },
                       icon: const Icon(
                         Icons.delete_forever_outlined,

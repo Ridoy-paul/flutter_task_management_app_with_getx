@@ -15,6 +15,7 @@ class TaskScreenController extends GetxController {
   bool get successStatus => _successStatus;
   TaskListModel get taskListModel => _taskListModel;
 
+  /// Function for get task lists...
   Future<bool> getTaskList(String taskType) async {
     _getTaskScreenInProgress = true;
     update();
@@ -31,6 +32,7 @@ class TaskScreenController extends GetxController {
     return false;
   }
 
+  /// Function for Update task status...
   Future<bool> updateTaskStatus(String taskID, String status) async {
     _getTaskScreenInProgress = true;
     update();
@@ -49,5 +51,25 @@ class TaskScreenController extends GetxController {
     _successStatus = false;
     return false;
   }
+
+  /// Function for delete task
+  Future<bool> deleteTaskItem(String taskId) async {
+    _getTaskScreenInProgress = true;
+    update();
+
+    final response = await NetworkCaller().getRequest(Urls.deleteTaskItem(taskId));
+    _getTaskScreenInProgress = false;
+    update();
+    if(response.isSuccess) {
+      _message = "Task Status Update.";
+      _successStatus = true;
+      return true;
+    }
+
+    return false;
+  }
+
+
+
 
 }
