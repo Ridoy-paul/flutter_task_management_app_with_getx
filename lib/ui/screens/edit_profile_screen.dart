@@ -151,60 +151,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         photo, _passwordTEController.text);
     showSnackMessage(_profileUpdateController.message,
         _profileUpdateController.successStatus);
-
-    /*
-    _updateProfileInProgressStatus = true;
-    if (mounted) {
-      setState(() {});
-    }
-
-
-    String? photoInBase64;
-
-    Map<String, dynamic> inputData = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-    };
-
-    if(_passwordTEController.text.isNotEmpty) {
-      inputData['password'] = _passwordTEController.text;
-    }
-
-    if(photo != null) {
-      List<int> imageBytes = await photo!.readAsBytes();
-      photoInBase64 = base64Encode(imageBytes);
-      inputData['photo'] = photoInBase64;
-    }
-
-    final NetworkResponse response = await NetworkCaller().postRequest(Urls.profileUpdate, body: inputData,);
-
-    _updateProfileInProgressStatus = false;
-    if (mounted) {
-      setState(() {});
-    }
-
-    if(response.isSuccess) {
-      AuthController.updateUserInformation(UserModel(
-        email: _emailTEController.text.trim(),
-        firstName: _firstNameTEController.text.trim(),
-        lastName: _lastNameTEController.text.trim(),
-        mobile: _mobileTEController.text.trim(),
-        photo: photoInBase64 ?? AuthController.user?.photo,
-      ));
-
-      if(mounted) {
-        //showSnackMessage(context, "Profile Updated.");
-      }
-
-    }
-    else {
-      if(mounted) {
-        //showSnackMessage(context, "Network Error! Please try again.", true);
-      }
-    }
-     */
   }
 
 

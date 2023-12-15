@@ -138,38 +138,5 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (response) {
       Get.to(PinVerificationScreen(email: _emailTEController.text.trim(),));
     }
-
-    /*
-      _forgotPasswordInProgressStatus = true;
-      if (mounted) {
-        setState(() {});
-      }
-
-      final response = await NetworkCaller().getRequest(Urls.recoveryVerifyEmail(_emailTEController.text.trim()));
-      if(response.isSuccess) {
-        if(response.jsonResponse['status'] == 'success') {
-          if(mounted) {
-            //showSnackMessage(context, '6 digit verification code sent your email.');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PinVerificationScreen(email: _emailTEController.text.trim(),),),);
-          }
-        }
-        else {
-          if(mounted) {
-            //showSnackMessage(context, response.jsonResponse['data'], true);
-          }
-        }
-      }
-      else {
-        if(mounted) {
-          //showSnackMessage(context, "Something is error! Please try again.", true);
-        }
-      }
-
-      _forgotPasswordInProgressStatus = false;
-      if (mounted) {
-        setState(() {});
-      }
-     */
-
   }
 }

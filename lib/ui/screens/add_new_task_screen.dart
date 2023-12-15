@@ -117,40 +117,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
     showSnackMessage(_addTaskController.message, _addTaskController.successStatus);
 
-    /*
-    /// Old system code
-    if(_addNewTaskFormKey.currentState!.validate()) {
-      _createInProgressStatus = true;
-      if(mounted) {
-        setState(() {});
-      }
-      final NetworkResponse  response = await NetworkCaller().postRequest(Urls.createTask, body: {
-        "title": _subjectTEController.text.trim(),
-        "description": _descriptionTEController.text.trim(),
-        "status": "New",
-      });
-
-      _createInProgressStatus = false;
-
-       if(mounted) {
-         setState(() {});
-       }
-
-       if(response.isSuccess) {
-         _subjectTEController.clear();
-         _descriptionTEController.clear();
-         if(mounted) {
-           //showSnackMessage(context, "New Task Created.");
-         }
-       }
-       else {
-         if(mounted) {
-           //showSnackMessage(context, "Something is wrong, Please try again!", true);
-         }
-       }
-    }
-    */
-
   }
 
   @override

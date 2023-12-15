@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_management_app/ui/controllers/forgot_password_pin_verification_controller.dart';
+import '../controllers/forgot_password_pin_verification_controller.dart';
 import 'package:get/get.dart';
 import '../widgets/snack_message.dart';
 import '../../data/utility/helpers.dart';
@@ -168,40 +168,6 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       Get.to(ResetPasswordScreen(
         email: widget.email, code: _pinTEController.text,));
     }
-
-
-    /*
-    /// old method code.
-      _pinVerificationInProgressStatus = true;
-      if (mounted) {
-        setState(() {});
-      }
-
-      final response = await NetworkCaller().getRequest(Urls.recoveryVerifyOTP(widget.email, _pinTEController.text));
-      if(response.isSuccess) {
-        if(response.jsonResponse['status'] == 'success') {
-          if(mounted) {
-            //showSnackMessage(context, 'Verification Success.');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen(email: widget.email, code: _pinTEController.text,)));
-          }
-        }
-        else {
-          if(mounted) {
-            //showSnackMessage(context, response.jsonResponse['data'] ?? '', true);
-          }
-        }
-      }
-      else {
-        if(mounted) {
-          //showSnackMessage(context, 'Network Error! Please try again.', true);
-        }
-      }
-
-      _pinVerificationInProgressStatus = false;
-      if (mounted) {
-        setState(() {});
-      }
-     */
   }
 
 }
