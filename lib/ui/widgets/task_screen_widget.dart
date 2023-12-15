@@ -26,7 +26,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _getTaskCountSummeryInProgress = false;
 
   //TaskListModel taskListModel = TaskListModel();
-  TaskCountSummeryListModel taskCountSummeryListModel = TaskCountSummeryListModel();
+  // TaskCountSummeryListModel taskCountSummeryListModel = TaskCountSummeryListModel();
   final TaskScreenController _taskScreenController = Get.find<TaskScreenController>();
 
   // Future<void> getTaskList() async {
@@ -52,25 +52,25 @@ class _TaskScreenState extends State<TaskScreen> {
   //    */
   // }
 
-  Future<void> getTaskCountSummeryList() async {
-    _getTaskCountSummeryInProgress = true;
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    final NetworkResponse response =
-    await NetworkCaller().getRequest(Urls.getTaskStatusCount);
-    if (response.isSuccess) {
-      taskCountSummeryListModel =
-          TaskCountSummeryListModel.fromJson(response.jsonResponse);
-    }
-
-    _getTaskCountSummeryInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  // Future<void> getTaskCountSummeryList() async {
+  //   _getTaskCountSummeryInProgress = true;
+  //
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  //
+  //   final NetworkResponse response =
+  //   await NetworkCaller().getRequest(Urls.getTaskStatusCount);
+  //   if (response.isSuccess) {
+  //     taskCountSummeryListModel =
+  //         TaskCountSummeryListModel.fromJson(response.jsonResponse);
+  //   }
+  //
+  //   _getTaskCountSummeryInProgress = false;
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  // }
 
 
   @override

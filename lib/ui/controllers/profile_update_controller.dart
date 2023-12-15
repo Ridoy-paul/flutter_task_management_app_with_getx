@@ -10,7 +10,7 @@ import 'auth_controller.dart';
 
 class ProfileUpdateController extends GetxController {
   bool _updateProfileInProgressStatus = false;
-  String _message = '';
+  String _message = 'Profile Updated.';
   bool _successStatus = true;
 
   bool get updateProfileInProgressStatus => _updateProfileInProgressStatus;
@@ -18,7 +18,6 @@ class ProfileUpdateController extends GetxController {
   bool get successStatus => _successStatus;
 
   Future<bool> updateUserProfileConfirm(String email, String firstName, String lastName, String mobile, XFile? photo, String? password) async {
-
     _updateProfileInProgressStatus = true;
     update();
 

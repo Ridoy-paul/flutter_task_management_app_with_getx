@@ -24,11 +24,10 @@ class _ProfileSummeryState extends State<ProfileSummery> {
 
   @override
   Widget build(BuildContext context) {
-    Uint8List imageBytes = const Base64Decoder().convert(
-        _authController.user?.photo ?? '');
 
     return GetBuilder<AuthController>(
         builder: (authController) {
+          Uint8List imageBytes = const Base64Decoder().convert( _authController.user?.photo ?? '');
           return ListTile(
             onTap: () {
               if (widget.enableOnTap) {
