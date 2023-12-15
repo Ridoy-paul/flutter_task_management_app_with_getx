@@ -19,15 +19,13 @@ class TaskScreenController extends GetxController {
     final NetworkResponse response = await NetworkCaller().getRequest(Urls.getTask(taskType));
 
     _getTaskScreenInProgress = false;
+    update();
+
     if (response.isSuccess) {
       _taskListModel = TaskListModel.fromJson(response.jsonResponse);
       return true;
     }
-
-    update();
     return false;
-   // return;
-
   }
 
 }

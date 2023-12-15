@@ -10,7 +10,6 @@ import 'new_task_summery_widget.dart';
 import 'task_item_card_widget.dart';
 import '../../data/data_network_caller/network_caller.dart';
 import '../../data/data_network_caller/network_response.dart';
-import '../../data/models/task_list_model.dart';
 import '../../data/utility/helpers.dart';
 import '../../data/utility/urls.dart';
 
@@ -24,36 +23,34 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  bool _getTaskInProgress = false;
   bool _getTaskCountSummeryInProgress = false;
 
-  TaskListModel taskListModel = TaskListModel();
+  //TaskListModel taskListModel = TaskListModel();
   TaskCountSummeryListModel taskCountSummeryListModel = TaskCountSummeryListModel();
-  final TaskScreenController _taskScreenController = Get.find<
-      TaskScreenController>();
+  final TaskScreenController _taskScreenController = Get.find<TaskScreenController>();
 
-  Future<void> getTaskList() async {
-    final response = _taskScreenController.getTaskList(widget.taskType);
-
-    print(response);
-    //taskListModel = TaskListModel.fromJson(response);
-
-    /*
-    setState(() {
-      _getTaskInProgress = true;
-    });
-
-    final NetworkResponse response = await NetworkCaller().getRequest(Urls.getTask(widget.taskType));
-
-    if (response.isSuccess) {
-      taskListModel = TaskListModel.fromJson(response.jsonResponse);
-    }
-
-    setState(() {
-      _getTaskInProgress = false;
-    });
-     */
-  }
+  // Future<void> getTaskList() async {
+  //   final response = _taskScreenController.getTaskList(widget.taskType);
+  //
+  //   print(response);
+  //   //taskListModel = TaskListModel.fromJson(response);
+  //
+  //   /*
+  //   setState(() {
+  //     _getTaskInProgress = true;
+  //   });
+  //
+  //   final NetworkResponse response = await NetworkCaller().getRequest(Urls.getTask(widget.taskType));
+  //
+  //   if (response.isSuccess) {
+  //     taskListModel = TaskListModel.fromJson(response.jsonResponse);
+  //   }
+  //
+  //   setState(() {
+  //     _getTaskInProgress = false;
+  //   });
+  //    */
+  // }
 
   Future<void> getTaskCountSummeryList() async {
     _getTaskCountSummeryInProgress = true;
@@ -79,7 +76,8 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     super.initState();
-    getTaskList();
+    _taskScreenController.getTaskList(widget.taskType);
+    //getTaskList();
 
     if (widget.taskType == "New") {
       getTaskCountSummeryList();
@@ -127,29 +125,29 @@ class _TaskScreenState extends State<TaskScreen> {
               ),
             ) : Container(),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: getTaskList,
-                child: GetBuilder<TaskScreenController>(builder: (taskScController) {
-                  return Visibility(
-                    visible: !taskScController.getTaskScreenInProgress,
+              child: GetBuilder<TaskScreenController>(builder: (taskScreenController) {
+                return RefreshIndicator(
+                  onRefresh: ()=> taskScreenController.getTaskList(widget.taskType),
+                  child: Visibility(
+                    visible: !taskScreenController.getTaskScreenInProgress,
                     replacement: circleProgressIndicatorShow(),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
-                        itemCount: taskListModel.taskList?.length ?? 0,
+                        itemCount: taskScreenController.taskListModel.taskList?.length ?? 0,
                         itemBuilder: (context, index) {
                           return TaskItemCard(
-                            task: taskListModel.taskList![index],
+                            task: taskScreenController.taskListModel.taskList![index],
                             onStatusChange: () {
-                              getTaskList();
+                              taskScreenController.getTaskList(widget.taskType);
                               if (widget.taskType == "New") {
                                 getTaskCountSummeryList();
                               }
                             },
                             showProgress: (inProgress) {
-                              setState(() {
-                                _getTaskInProgress = inProgress;
-                              });
+                              // setState(() {
+                              //   _getTaskInProgress = inProgress;
+                              // });
                               // if (!inProgress) {
                               //   showSnackMessage(context, "Task Status Updated.");
                               // }
@@ -158,9 +156,9 @@ class _TaskScreenState extends State<TaskScreen> {
                         },
                       ),
                     ),
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
           ],
         ),
@@ -174,7 +172,8 @@ class _TaskScreenState extends State<TaskScreen> {
           if (widget.taskType == "New") {
             getTaskCountSummeryList();
           }
-          getTaskList();
+
+          _taskScreenController.getTaskList(widget.taskType);
         },
         child: const Icon(Icons.add),
       ) : null,
