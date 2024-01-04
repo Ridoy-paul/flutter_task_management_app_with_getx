@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../controllers/forgot_password_pin_verification_controller.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,30 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final GlobalKey<FormState> _pinGlobalKey = GlobalKey<FormState>();
   final ForgotPasswordPinVerificationController _forgotPasswordPinVerificationController = Get
       .find<ForgotPasswordPinVerificationController>();
+
+  // late Timer _timer;
+  // int _start = 10;
+  //
+  // void startTimer() {
+  //   const oneSec = Duration(seconds: 1);
+  //   _timer = Timer.periodic(oneSec, (timer) {
+  //     if(_start == 0) {
+  //       _timer.cancel();
+  //       setState(() {});
+  //     }
+  //     else {
+  //       _start--;
+  //       setState(() {});
+  //     }
+  //   });
+  // }
+
+  @override
+  void initState() {
+    _forgotPasswordPinVerificationController.startTimer();
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,20 +124,23 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
                     SizedBox(
                       width: double.infinity,
-                      child: GetBuilder<ForgotPasswordPinVerificationController>(builder: (controller) {
-                        return Visibility(
-                          visible: !controller.pinVerificationInProgressStatus,
-                          replacement: circleProgressIndicatorShow(),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              confirmPinVerification();
-                              //Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen() ));
-                            },
-                            child: const Text(
-                              "Verify", style: TextStyle(fontSize: 16),),
-                          ),
-                        );
-                      }),
+                      child: GetBuilder<
+                          ForgotPasswordPinVerificationController>(
+                          builder: (controller) {
+                            return Visibility(
+                              visible: !controller
+                                  .pinVerificationInProgressStatus,
+                              replacement: circleProgressIndicatorShow(),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  confirmPinVerification();
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen() ));
+                                },
+                                child: const Text(
+                                  "Verify", style: TextStyle(fontSize: 16),),
+                              ),
+                            );
+                          }),
                     ),
                     const SizedBox(height: 18,),
                     Center(
@@ -144,27 +172,56 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                         ],
                       ),
                     ),
-                    Center(
-                      child: RichText(
-                        text: const TextSpan(
-                          text: 'This code will expire in ',
-                          style: TextStyle(
-                            color: colorGray,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Flutter',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 16.0,
-                              ),
+                    GetBuilder<ForgotPasswordPinVerificationController>(builder: (forgotPassPinVerificationController) {
+                      return forgotPassPinVerificationController.countTime != 0 ? Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'This code will expire in ',
+                            style: const TextStyle(
+                              color: colorGray,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "${forgotPassPinVerificationController.countTime.toString()}s",
+                                style: const TextStyle(
+                                  color: colorGreen,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
+                      ) : Center(
+                        child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Did\'n get code?",
+                                    style: TextStyle(
+                                      color: colorGray,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      forgotPassPinVerificationController.countTime = 120;
+                                      forgotPassPinVerificationController.startTimer();
+                                    },
+                                    child: const Text(
+                                      "Resend",
+                                      style: TextStyle(
+                                        color: colorGreen,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                    }),
                   ],
                 ),
               ),
