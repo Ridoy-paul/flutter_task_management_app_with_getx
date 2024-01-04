@@ -126,6 +126,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<void> forgotPasswordSubmit() async {
+    Get.to(PinVerificationScreen(email: _emailTEController.text.trim(),));
+    return;
+
     if (!_forgotPasswordFormKey.currentState!.validate()) {
       return;
     }

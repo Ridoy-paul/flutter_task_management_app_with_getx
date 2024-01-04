@@ -143,7 +143,28 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    Center(
+                      child: RichText(
+                        text: const TextSpan(
+                          text: 'This code will expire in ',
+                          style: TextStyle(
+                            color: colorGray,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Flutter',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -156,6 +177,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
 
   Future<void> confirmPinVerification() async {
+    //Get.to(ResetPasswordScreen(email: widget.email, code: '222222',));
+
     if (!_pinGlobalKey.currentState!.validate()) {
       return;
     }
